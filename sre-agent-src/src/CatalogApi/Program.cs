@@ -104,11 +104,11 @@ app.MapGet("/health", async (CosmosDbService db) =>
         : Results.Json(new { status = "unhealthy", timestamp = DateTime.UtcNow }, statusCode: 503);
 });
 
-// GET /products — list all products
-app.MapGet("/products", async (CosmosDbService db) =>
+// GET /products — list products; out-of-stock items sorted last (or hidden with ?hideOutOfStock=true)
+app.MapGet("/products", async (CosmosDbService db, bool? hideOutOfStock) =>
 {
     var products = await db.GetProductsAsync();
-    return Results.Ok(products);
+    return Results.Ok(ProductSearch.Apply(products, hideOutOfStock ?? false));
 });
 
 // GET /products/{id} — get a single product by id

@@ -8,4 +8,10 @@ public class Product
     public string Description { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public int Stock { get; set; }
+
+    [Newtonsoft.Json.JsonIgnore]
+    public bool IsOutOfStock => Stock <= 0;
+
+    [Newtonsoft.Json.JsonIgnore]
+    public string? Badge => IsOutOfStock ? "Out of Stock" : null;
 }
